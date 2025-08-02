@@ -1,0 +1,244 @@
+<!DOCTYPE html> <!-- This tells the browser this is an HTML5 document -->
+<html lang="en"> <!-- Start of HTML document, language is English -->
+<head> <!-- Head section contains page information -->
+    <meta charset="UTF-8"> <!-- Set character encoding to UTF-8 -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- Make page responsive on mobile -->
+    <title>Simple Weather App</title> <!-- Title that appears in browser tab -->
+    <style> <!-- Start of CSS styling -->
+        body { /* Style the main page body */
+            font-family: Arial, sans-serif; /* Set font to Arial */
+            background-color: lightblue; /* Set background color to light blue */
+            margin: 0; /* Remove default margins */
+            padding: 20px; /* Add 20px padding around the page */
+        }
+
+        .weather-app { /* Style the main weather container */
+            background-color: white; /* Set background to white */
+            max-width: 500px; /* Maximum width of 500px */
+            margin: 0 auto; /* Center the container */
+            padding: 20px; /* Add 20px padding inside */
+            border-radius: 10px; /* Round the corners */
+            box-shadow: 0 4px 8px gray; /* Add gray shadow */
+        }
+
+        .country-selector { /* Style the country selector container */
+            text-align: center; /* Center align the selector */
+            margin-bottom: 20px; /* Add space below selector */
+        }
+
+        .country-dropdown { /* Style the dropdown menu */
+            background-color: lightgray; /* Set background to light gray */
+            border: 2px solid gray; /* Add gray border */
+            padding: 10px 20px; /* Add padding inside */
+            border-radius: 5px; /* Round corners */
+            font-size: 16px; /* Set font size */
+            cursor: pointer; /* Show pointer cursor */
+        }
+
+        .header { /* Style the main weather header */
+            text-align: center; /* Center align text */
+            margin-bottom: 20px; /* Add space below header */
+        }
+
+        .location { /* Style the location text */
+            font-size: 18px; /* Set font size to 18px */
+            margin-bottom: 10px; /* Add space below */
+        }
+
+        .temperature { /* Style the main temperature display */
+            font-size: 48px; /* Set large font size */
+            font-weight: bold; /* Make text bold */
+            color: blue; /* Set color to blue */
+            margin-bottom: 10px; /* Add space below */
+        }
+
+        .description { /* Style the weather description */
+            font-size: 16px; /* Set font size to 16px */
+            color: gray; /* Set color to gray */
+        }
+
+        .details { /* Style the weather details container */
+            display: flex; /* Use flexbox layout */
+            justify-content: space-around; /* Spread items evenly */
+            margin: 20px 0; /* Add vertical margins */
+        }
+
+        .detail-box { /* Style each detail box */
+            text-align: center; /* Center align text */
+            background-color: lightgray; /* Set background to light gray */
+            padding: 15px; /* Add padding inside */
+            border-radius: 5px; /* Round corners */
+            width: 45%; /* Set width to 45% */
+        }
+
+        .detail-title { /* Style the detail titles */
+            font-size: 14px; /* Set small font size */
+            color: gray; /* Set color to gray */
+            margin-bottom: 5px; /* Add space below */
+        }
+
+        .detail-value { /* Style the detail values */
+            font-size: 20px; /* Set font size to 20px */
+            font-weight: bold; /* Make text bold */
+            color: black; /* Set color to black */
+        }
+
+        .forecast { /* Style the forecast container */
+            margin-top: 20px; /* Add space above */
+        }
+
+        .forecast-title { /* Style the forecast title */
+            font-size: 18px; /* Set font size to 18px */
+            font-weight: bold; /* Make text bold */
+            margin-bottom: 15px; /* Add space below */
+            text-align: center; /* Center align text */
+        }
+
+        .forecast-items { /* Style the forecast items container */
+            display: grid; /* Use grid layout */
+            grid-template-columns: repeat(4, 1fr); /* Create 4 columns */
+            gap: 10px; /* Add gap between items */
+        }
+
+        .forecast-item { /* Style each forecast item */
+            text-align: center; /* Center align text */
+            background-color: lightgray; /* Set background to light gray */
+            padding: 8px; /* Add padding inside */
+            border-radius: 5px; /* Round corners */
+        }
+
+        .forecast-time { /* Style the forecast time */
+            font-size: 11px; /* Set small font size */
+            color: gray; /* Set color to gray */
+            margin-bottom: 3px; /* Add space below */
+        }
+
+        .forecast-temp { /* Style the forecast temperature */
+            font-size: 14px; /* Set font size to 14px */
+            font-weight: bold; /* Make text bold */
+            color: black; /* Set color to black */
+        }
+
+        @media (max-width: 480px) { /* Style for mobile phones */
+            .forecast-items { /* Change grid for mobile */
+                grid-template-columns: repeat(2, 1fr); /* Use 2 columns on mobile */
+            }
+        }
+    </style> <!-- End of CSS styling -->
+</head> <!-- End of head section -->
+<body> <!-- Start of body section -->
+    <div class="weather-app"> <!-- Main weather app container -->
+        
+        <div class="country-selector"> <!-- Container for country selector -->
+            <select class="country-dropdown" onchange="showWeather(this.value)"> <!-- Dropdown menu for countries -->
+                <option value="bulgaria">Bulgaria</option> <!-- Bulgaria option -->
+                <option value="uk">United Kingdom</option> <!-- UK option -->
+            </select> <!-- End of dropdown -->
+        </div> <!-- End of country selector -->
+
+        <div class="header"> <!-- Header section -->
+            <div class="location" id="location">Sofia, Bulgaria</div> <!-- Display current location -->
+            <div class="temperature" id="temperature">22°</div> <!-- Display current temperature -->
+            <div class="description" id="description">Sunny</div> <!-- Display weather description -->
+        </div> <!-- End of header -->
+
+        <div class="details"> <!-- Weather details section -->
+            <div class="detail-box"> <!-- Wind speed box -->
+                <div class="detail-title">Wind Speed</div> <!-- Wind speed title -->
+                <div class="detail-value" id="windSpeed">15 km/h</div> <!-- Wind speed value -->
+            </div> <!-- End of wind speed box -->
+            <div class="detail-box"> <!-- Humidity box -->
+                <div class="detail-title">Humidity</div> <!-- Humidity title -->
+                <div class="detail-value" id="humidity">5%</div> <!-- Humidity value -->
+            </div> <!-- End of humidity box -->
+        </div> <!-- End of details section -->
+
+        <div class="forecast"> <!-- Forecast section -->
+            <div class="forecast-title">Today's Forecast (Every 3 Hours)</div> <!-- Forecast title for every 3 hours -->
+            <div class="forecast-items" id="forecastItems"> <!-- Container for forecast items -->
+                <!-- Forecast items will be generated by JavaScript -->
+            </div> <!-- End of forecast items -->
+        </div> <!-- End of forecast section -->
+
+    </div> <!-- End of weather app container -->
+
+    <script> <!-- Start of JavaScript code -->
+        // Create an object to store weather data for all countries
+        var weatherData = {
+            // Bulgaria weather data
+            bulgaria: {
+                location: "Sofia, Bulgaria", // City and country name
+                temperature: "22°", // Current temperature
+                description: "Sunny", // Weather description
+                windSpeed: "15 km/h", // Wind speed
+                humidity: "5%", // Humidity percentage
+                forecast: [ // Array of 3-hour forecast data
+                    {time: "00:00", temp: "15°"}, // Midnight
+                    {time: "03:00", temp: "12°"}, // 3 AM
+                    {time: "06:00", temp: "14°"}, // 6 AM
+                    {time: "09:00", temp: "20°"}, // 9 AM
+                    {time: "12:00", temp: "26°"}, // Noon
+                    {time: "15:00", temp: "27°"}, // 3 PM
+                    {time: "18:00", temp: "23°"}, // 6 PM
+                    {time: "21:00", temp: "19°"}  // 9 PM
+                ]
+            },
+            // UK weather data
+            uk: {
+                location: "London, UK", // City and country name
+                temperature: "8°", // Current temperature
+                description: "Rainy", // Weather description
+                windSpeed: "22 km/h", // Wind speed
+                humidity: "85%", // Humidity percentage
+                forecast: [ // Array of 3-hour forecast data
+                    {time: "00:00", temp: "6°"}, // Midnight
+                    {time: "03:00", temp: "4°"}, // 3 AM
+                    {time: "06:00", temp: "5°"}, // 6 AM
+                    {time: "09:00", temp: "8°"}, // 9 AM
+                    {time: "12:00", temp: "11°"}, // Noon
+                    {time: "15:00", temp: "11°"}, // 3 PM
+                    {time: "18:00", temp: "8°"}, // 6 PM
+                    {time: "21:00", temp: "7°"}  // 9 PM
+                ]
+            }
+        };
+
+        // Function to show weather for selected country
+        function showWeather(country) {
+            // Get weather data for selected country
+            var data = weatherData[country];
+
+            // Update location text
+            document.getElementById('location').textContent = data.location;
+            // Update temperature text
+            document.getElementById('temperature').textContent = data.temperature;
+            // Update description text
+            document.getElementById('description').textContent = data.description;
+            // Update wind speed text
+            document.getElementById('windSpeed').textContent = data.windSpeed;
+            // Update humidity text
+            document.getElementById('humidity').textContent = data.humidity;
+
+            // Get forecast container
+            var forecastContainer = document.getElementById('forecastItems');
+            // Clear existing forecast items
+            forecastContainer.innerHTML = '';
+
+            // Loop through all forecast periods (every 3 hours)
+            for (var i = 0; i < data.forecast.length; i++) {
+                // Create new forecast item div
+                var item = document.createElement('div');
+                // Add forecast-item class to div
+                item.className = 'forecast-item';
+                // Set inner HTML with time and temperature
+                item.innerHTML = '<div class="forecast-time">' + data.forecast[i].time + '</div><div class="forecast-temp">' + data.forecast[i].temp + '</div>';
+                // Add item to forecast container
+                forecastContainer.appendChild(item);
+            }
+        }
+
+        // Initialize the app with Bulgaria data when page loads
+        showWeather('bulgaria');
+    </script> <!-- End of JavaScript code -->
+</body> <!-- End of body section -->
+</html> <!-- End of HTML document -->
