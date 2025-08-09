@@ -1,0 +1,46 @@
+# 🚫 Това е .gitignore - казва на Git кои файлове да НЕ следи
+# Като списък "Не пипай!" за някои папки и файлове
+
+# 📦 Компилирани файлове - създават се автоматично
+/dist              # 🏗️ Финалната версия на приложението
+/tmp               # 🗑️ Временни файлове
+/out-tsc           # 📤 TypeScript output файлове
+/bazel-out         # 🔧 Bazel build файлове (ако използваме Bazel)
+
+# 📚 Node модули - инсталират се с npm install
+/node_modules      # 📦 Хиляди файлове с библиотеки (много голяма папка!)
+npm-debug.log      # 🐛 Лог файл при грешки в npm
+yarn-error.log     # 🧶 Лог файл при грешки в Yarn (алтернатива на npm)
+
+# 💻 Файлове на редактори и IDE-та
+.idea/             # 🧠 IntelliJ IDEA настройки
+.project           # 📋 Eclipse project файл
+.classpath         # 📚 Eclipse classpath
+.c9/               # ☁️ Cloud9 IDE
+*.launch           # 🚀 Launch конфигурации
+.settings/         # ⚙️ Настройки на Eclipse
+*.sublime-workspace # 📝 Sublime Text workspace
+
+# 💙 Visual Studio Code
+.vscode/*          # 📁 VS Code настройки
+!.vscode/settings.json     # ✅ НО запазваме settings.json
+!.vscode/tasks.json        # ✅ И tasks.json
+!.vscode/launch.json       # ✅ И launch.json
+!.vscode/extensions.json   # ✅ И extensions.json
+.history/*         # 📜 История на файловете
+
+# 🗂️ Разни файлове
+/.angular/cache    # 💾 Angular кеш (за по-бързо компилиране)
+.sass-cache/       # 🎨 SASS кеш
+/connect.lock      # 🔒 Connect lock файл
+/coverage          # 📊 Code coverage репорти
+/libpeerconnection.log # 📞 WebRTC логове
+testem.log         # 🧪 Testem логове
+/typings           # 📝 TypeScript typings (стар начин)
+
+# 💻 Системни файлове
+.DS_Store          # 🍎 macOS системен файл
+Thumbs.db          # 🪟 Windows thumbnail кеш
+
+# 🎯 Обобщение: Git ще следи само важните файлове с код,
+# а ще игнорира всички генерирани и системни файлове!

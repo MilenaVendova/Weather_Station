@@ -1,0 +1,9 @@
+{
+  "name": "weather-station-angular",
+  "version": "1.0.0",
+  "scripts": {
+    "start": "node server.js",
+    "build": "echo Build not configured"
+  },
+  "private": true
+}

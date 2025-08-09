@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Weather Station</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    /* Global styles */
+    body {
+      font-family: Arial, sans-serif;
+      background-color: lightblue;
+      margin: 0;
+      padding: 20px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    h1, h2, h3, p {
+      margin: 0;
+    }
+
+    /* Component styles */
+    .weather-app {
+      background-color: white;
+      max-width: 500px;
+      margin: 0 auto;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px gray;
+    }
+
+    .country-selector {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .country-selector label {
+      display: block;
+      margin-bottom: 10px;
+      font-weight: bold;
+    }
+
+    .country-dropdown {
+      background-color: lightgray;
+      border: 2px solid gray;
+      padding: 10px 20px;
+      border-radius: 5px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    .country-dropdown:hover {
+      background-color: #e0e0e0;
+    }
+
+    .loading, .error {
+      text-align: center;
+      padding: 20px;
+    }
+
+    .error {
+      color: #d32f2f;
+    }
+
+    .retry-button {
+      margin-top: 10px;
+      padding: 8px 16px;
+      background-color: #1976d2;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 14px;
+      transition: background-color 0.3s ease;
+    }
+
+    .retry-button:hover {
+      background-color: #1565c0;
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .location {
+      font-size: 18px;
+      margin: 0 0 10px 0;
+    }
+
+    .temperature {
+      font-size: 48px;
+      font-weight: bold;
+      color: blue;
+      margin-bottom: 10px;
+    }
+
+    .description {
+      font-size: 16px;
+      color: gray;
+      margin: 0;
+    }
+
+    .details {
+      display: flex;
+      justify-content: space-around;
+      margin: 20px 0;
+    }
+
+    .detail-box {
+      text-align: center;
+      background-color: lightgray;
+      padding: 15px;
+      border-radius: 5px;
+      width: 45%;
+      transition: transform 0.2s ease;
+    }
+
+    .detail-box:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+
+    .detail-title {
+      font-size: 14px;
+      color: gray;
+      margin-bottom: 5px;
+    }
+
+    .detail-value {
+      font-size: 20px;
+      font-weight: bold;
+      color: black;
+    }
+
+    .forecast {
+      margin-top: 20px;
+    }
+
+    .forecast-title {
+      font-size: 18px;
+      font-weight: bold;
+      margin-bottom: 15px;
+      text-align: center;
+    }
+
+    .forecast-items {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+    }
+
+    .forecast-item {
+      text-align: center;
+      background-color: lightgray;
+      padding: 8px;
+      border-radius: 5px;
+      transition: all 0.2s ease;
+    }
+
+    .forecast-item:hover {
+      background-color: #e0e0e0;
+      transform: scale(1.05);
+    }
+
+    .forecast-time {
+      font-size: 11px;
+      color: gray;
+      margin-bottom: 3px;
+    }
+
+    .forecast-temp {
+      font-size: 14px;
+      font-weight: bold;
+      color: black;
+    }
+
+    @media (max-width: 480px) {
+      .weather-app {
+        padding: 15px;
+      }
+
+      .temperature {
+        font-size: 36px;
+      }
+
+      .details {
+        flex-direction: column;
+        gap: 10px;
+      }
+
+      .detail-box {
+        width: 100%;
+      }
+
+      .forecast-items {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    .hidden {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="weather-app">
+    <div class="country-selector">
+      <label for="countrySelect">Select Country:</label>
+      <select id="countrySelect" class="country-dropdown">
+        <option value="bulgaria">Bulgaria</option>
+        <option value="uk">United Kingdom</option>
+      </select>
+    </div>
+
+    <div id="loading" class="loading hidden">
+      <p>Loading weather data...</p>
+    </div>
+
+    <div id="error" class="error hidden">
+      <p>Could not load weather data. Please try again.</p>
+      <button class="retry-button" onclick="loadWeather()">Retry</button>
+    </div>
+
+    <div id="weatherContent" class="hidden">
+      <header class="header">
+        <h1 class="location" id="location"></h1>
+        <div class="temperature" id="temperature"></div>
+        <p class="description" id="description"></p>
+      </header>
+
+      <div class="details">
+        <div class="detail-box">
+          <div class="detail-title">Wind Speed</div>
+          <div class="detail-value" id="windSpeed"></div>
+        </div>
+        <div class="detail-box">
+          <div class="detail-title">Humidity</div>
+          <div class="detail-value" id="humidity"></div>
+        </div>
+      </div>
+
+      <div class="forecast">
+        <div class="forecast-title">Today's Forecast (Every 3 Hours)</div>
+        <div class="forecast-items" id="forecastItems"></div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Weather app logic
+    const apiUrl = 'http://localhost:5240/weather';
+    let selectedCountry = 'bulgaria';
+
+    // Elements
+    const countrySelect = document.getElementById('countrySelect');
+    const loadingDiv = document.getElementById('loading');
+    const errorDiv = document.getElementById('error');
+    const weatherContent = document.getElementById('weatherContent');
+
+    // Add event listener
+    countrySelect.addEventListener('change', function(e) {
+      selectedCountry = e.target.value;
+      loadWeather();
+    });
+
+    async function loadWeather() {
+      // Show loading, hide others
+      loadingDiv.classList.remove('hidden');
+      errorDiv.classList.add('hidden');
+      weatherContent.classList.add('hidden');
+
+      try {
+        const response = await fetch(`${apiUrl}/${selectedCountry}`);
+        
+        if (!response.ok) {
+          throw new Error('Failed to fetch weather data');
+        }
+
+        const data = await response.json();
+        
+        // Update UI
+        document.getElementById('location').textContent = data.location;
+        document.getElementById('temperature').textContent = data.temperature;
+        document.getElementById('description').textContent = data.description;
+        document.getElementById('windSpeed').textContent = data.windSpeed;
+        document.getElementById('humidity').textContent = data.humidity;
+
+        // Update forecast
+        const forecastContainer = document.getElementById('forecastItems');
+        forecastContainer.innerHTML = '';
+        
+        if (data.forecast && Array.isArray(data.forecast)) {
+          data.forecast.forEach(item => {
+            const forecastItem = document.createElement('div');
+            forecastItem.className = 'forecast-item';
+            forecastItem.innerHTML = `
+              <div class="forecast-time">${item.time}</div>
+              <div class="forecast-temp">${item.temp}</div>
+            `;
+            forecastContainer.appendChild(forecastItem);
+          });
+        }
+
+        // Show weather content, hide loading
+        loadingDiv.classList.add('hidden');
+        weatherContent.classList.remove('hidden');
+        
+      } catch (error) {
+        console.error('Error:', error);
+        loadingDiv.classList.add('hidden');
+        errorDiv.classList.remove('hidden');
+      }
+    }
+
+    // Load weather on page load
+    loadWeather();
+  </script>
+</body>
+</html>

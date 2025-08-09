@@ -1,0 +1,74 @@
+<!-- 🏠 Главната кутия на приложението за времето -->
+<div class="weather-app">
+  
+  <!-- 🌍 Секция за избор на държава -->
+  <div class="country-selector">
+    <label for="countrySelect">Select Country:</label>
+    <!-- 🆔 Даваме име на менюто -->
+    <select 
+      id="countrySelect"
+      class="country-dropdown"
+      [(ngModel)]="selectedCountry"
+      (change)="onCountryChange()"
+      aria-label="Select country for weather information">
+      <!-- 🔄 За всяка държава от списъка... -->
+      <option *ngFor="let country of countries" [value]="country.value">
+        {{ country.name }}
+      </option>
+    </select>
+    <!-- Край на падащото меню -->
+  </div>
+
+  <!-- ⏳ Показваме спинер докато зарежда -->
+  <div *ngIf="isLoading" class="loading">
+    <p>Loading weather data...</p>
+  </div>
+
+  <!-- ❌ Показваме грешка ако има проблем -->
+  <div *ngIf="hasError && !isLoading" class="error">
+    <p>Could not load weather data. Please try again.</p>
+    <button (click)="loadWeather()" class="retry-button">Retry</button>
+  </div>
+
+  <!-- 🌤️ Показваме данните за времето -->
+  <div *ngIf="weatherData && !isLoading && !hasError">
+    
+    <!-- 📍 Главна информация -->
+    <header class="header">
+      <h1 class="location">{{ weatherData.location }}</h1>
+      <!-- 🌡️ Кутия за температурата -->
+      <div class="temperature" aria-label="Current temperature">
+        {{ weatherData.temperature }}
+      </div>
+      <p class="description">{{ weatherData.description }}</p>
+    </header>
+
+    <!-- 📊 Детайли за вятър и влажност -->
+    <div class="details">
+      <!-- 💨 Кутийка за вятъра -->
+      <div class="detail-box">
+        <div class="detail-title">Wind Speed</div>
+        <div class="detail-value">{{ weatherData.windSpeed }}</div>
+      </div>
+      
+      <!-- 💧 Кутийка за влажността -->
+      <div class="detail-box">
+        <div class="detail-title">Humidity</div>
+        <div class="detail-value">{{ weatherData.humidity }}</div>
+      </div>
+    </div>
+
+    <!-- 📅 Прогноза за деня -->
+    <div class="forecast" *ngIf="weatherData.forecast && weatherData.forecast.length > 0">
+      <div class="forecast-title">Today's Forecast (Every 3 Hours)</div>
+      <div class="forecast-items">
+        <!-- 🔄 За всеки час от прогнозата... -->
+        <div class="forecast-item" *ngFor="let item of weatherData.forecast">
+          <div class="forecast-time">{{ item.time }}</div>
+          <div class="forecast-temp">{{ item.temp }}</div>
+        </div>
+      </div>
+    </div>
+    
+  </div>
+</div>
